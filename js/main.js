@@ -23,6 +23,8 @@ let login = localStorage.getItem('gloDelivery');
 
 function toggleModalAuth() {
     modalAuth.classList.toggle('is-open');
+    loginInput.style.borderColor = '';
+    
 }
 
 function authorized() {
@@ -56,21 +58,28 @@ function notAuthorized() {
 
     function logIn(event) {
         event.preventDefault();
-        login = loginInput.value;
+        
+        if (loginInput.value.trim()) {
+            login = loginInput.value;
 
-        localStorage.setItem('gloDelivery', login);
-
-        toggleModalAuth();
-
-        buttonAuth.removeEventListener('click', toggleModalAuth);
-        closeAuth.removeEventListener('click', toggleModalAuth);
-        logInForm.removeEventListener('submit', logIn);
-
-        logInForm.reset();
-
-        checkLogin();
-
-        checkAuth();
+            localStorage.setItem('gloDelivery', login);
+    
+            toggleModalAuth();
+    
+            buttonAuth.removeEventListener('click', toggleModalAuth);
+            closeAuth.removeEventListener('click', toggleModalAuth);
+            logInForm.removeEventListener('submit', logIn);
+    
+            logInForm.reset();
+            
+            //checkLogin();
+    
+            checkAuth();
+        } else {
+            loginInput.style.borderColor = 'lightcoral';
+            loginInput.value = '';
+        }
+        
     };
 
     buttonAuth.addEventListener('click', toggleModalAuth);
@@ -88,7 +97,7 @@ function checkAuth() {
 
 checkAuth();
 
-function checkLogin() {
+/* function checkLogin() {
     if (login == '') {
         loginInput.style.backgroundColor = 'lightcoral';
         //loginInput.value = 'Укажите Ваш логин';
@@ -96,4 +105,4 @@ function checkLogin() {
         toggleModalAuth();
 
     }
-}
+} */
