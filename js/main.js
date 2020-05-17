@@ -277,6 +277,10 @@ function init() {
                         })
                         .then(function(data) {
                             data.forEach(createCardGood);
+
+                            if (data.length == 0) {
+                                restaurantTitle.textContent = 'По вашему запросу ничего не найдено';
+                            }
                         });
                 });
             });
