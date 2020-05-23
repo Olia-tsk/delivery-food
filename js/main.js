@@ -29,6 +29,19 @@ let login = localStorage.getItem('gloDelivery');
 
 const cart = [];
 
+const loadCart = function() {
+    if (localStorage.getItem(login)) {
+        JSON.parse(localStorage.getItem(login)).forEach(function(item) {
+            cart.push(item);
+        });
+    };
+};
+
+//пример стрелочной функции, тоже самое что function() {}
+const saveCart = () => {
+    localStorage.setItem(login, JSON.stringify(cart));
+};
+
 const getData = async function(url) {
     const response = await fetch(url);
 
@@ -61,11 +74,12 @@ function returnMain() {
     containerPromo.classList.remove('hide');
     restaurants.classList.remove('hide');
     menu.classList.add('hide');
-}
+};
 
 function authorized() {
     function logOut() {
         login = null;
+        cart.length = 0;
 
         localStorage.removeItem('gloDelivery');
 
@@ -90,6 +104,7 @@ function authorized() {
     cartButton.style.display = 'flex';
 
     buttonOut.addEventListener('click', logOut);
+    loadCart();
 };
 
 function notAuthorized() {
@@ -228,7 +243,7 @@ function addToCart(event) {
         const title = card.querySelector('.card-title-reg').textContent;
         const cost = card.querySelector('.card-price').textContent;
         const id = buttonAddToCart.id;
-        
+
         const food = cart.find(function(item) {
             return item.id === id;
         })
@@ -242,11 +257,12 @@ function addToCart(event) {
                 cost,
                 count: 1
             });
-        }        
-    }
-}
+        };
+    };
+    saveCart();
+};
 
-function renderCart () {
+function renderCart() {
     modalBody.textContent = '';
 
     cart.forEach(function({ id, title, cost, count }) {
@@ -269,7 +285,7 @@ function renderCart () {
     }, 0);
 
     modalPrice.textContent = totalPrice + ' ₽';
-}
+};
 
 function changeCount(event) {
     const target = event.target;
@@ -283,7 +299,7 @@ function changeCount(event) {
             food.count--;
             if (food.count === 0) {
                 cart.splice(cart.indexOf(food), 1);
-            } 
+            }
         }
 
         if (target.classList.contains('counter-plus')) food.count++;
@@ -306,7 +322,8 @@ function changeCount(event) {
         food.count++;
         renderCart();
     } */
-}
+    saveCart();
+};
 
 function init() {
     getData('./db/partners.json').then(function(data) {
@@ -314,12 +331,11 @@ function init() {
 
     });
 
-    cartButton.addEventListener("click", function() {
-        renderCart();
-        toggleModal();
-    });
+    cartButton.addEventListener('click', renderCart);
 
-    buttonClearCart.addEventListener('click', function() {
+    cartButton.addEventListener('click', toggleModal);
+
+    buttonClearCart.addEventListener('click', () => {
         cart.length = 0;
         renderCart();
     })
@@ -403,6 +419,6 @@ function init() {
         },
         slidesPerView: 1,
     });
-}
+};
 
 init();
